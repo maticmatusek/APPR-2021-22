@@ -4,7 +4,7 @@
 Ob pregledu podatkov na SiStatu sem opazil kategorijo zaposlenost in podkategorijo revščina, kar je takoj vzbudilo zanimanje, kako je z revščino v Sloveniji in od česa vse je le ta odvisna. Ker nimam veliko znanja na področju revščine v Sloveniji, se mi je zdelo poučno, da bi raziskal kako na revščino vplivata plača in zaposlenost. Za lažje razumevanje dejanskega stanja bom vpliv plač in zaposlenosti na revščino pregledal na vseh regijah Slovenije.
 
 ## Opis podatkovnih virov
-Vse podatke sem našel na Sistatu. Odločil sem se, da jih bom prenesel v obliki csv datotek, medtem ko so bili podatki na voljo v .px, .csv, .xlsx in .jstat oblikah. 
+Podatke sem našel na Sistatu in na Zavodu za zaposlovanje. Odločil sem se, da jih bom prenesel v obliki csv datotek in xls datotek, medtem ko so bili podatki na voljo v .px, .csv, .xlsx in .jstat oblikah. 
 Povezave:
 * Delovno aktivno prebivalstvo:
   https://pxweb.stat.si/SiStatData/pxweb/sl/Data/-/0775355S.px/table/tableViewLayout2/
@@ -16,6 +16,7 @@ Povezave:
   https://pxweb.stat.si/SiStatData/pxweb/sl/Data/-/0867385S.px/table/tableViewLayout2/
 * Prebivalstvo:
   https://pxweb.stat.si/SiStatData/pxweb/sl/Data/Data/05C2002S.px/table/tableViewLayout2/
+* Brezposelnost: https://www.ess.gov.si/trg_dela/trg_dela_v_stevilkah 
 
 ## Zasnova podatkovnega modela
 Podatki v tidy data obliki bodo izgledali tako, da bodo stolpci oziroma spremenljivke :
