@@ -9,6 +9,7 @@ library(bigchess)
 library(reticulate)
 library(tmap)
 library(rvest)
+source("lib/libraries.r")
 
 sl <- locale("sl", decimal_mark=",", grouping_mark=".")
 
@@ -30,10 +31,8 @@ delovno.aktivno.prebivalstvo.1["SPOL"] = replace( novi_spol,novi_spol == "Spol -
 
 delovno.aktivno.prebivalstvo.2 = as.data.frame(delovno.aktivno.prebivalstvo.1)
 
-#PAZI MORAŠ DAT !RUN! POSEBAJ
-delovno.aktivno.prebivalstvo.2 = mutate(delovno.aktivno.prebivalstvo.2, LETO = str_replace_all(LETO,"(\\d{4}) 2 Delovno aktivno prebivalstvo po prebivališču - SKUPAJ", "\\1") )
-
-delovno.aktivno.prebivalstvo.koncno = delovno.aktivno.prebivalstvo.2
-
-
+# PAZI MORAŠ DAT !RUN! POSEBAJ
+delovno.aktivno.prebivalstvo.koncno = delovno.aktivno.prebivalstvo.2 %>%  mutate( LETO = str_replace_all(LETO, "(\\d{4}) 2 Delovno aktivno prebivalstvo po prebivališču - SKUPAJ", "\\1" ) )
+# ^^^^^^^
+delovno.aktivno.prebivalstvo.koncno$LETO = as.numeric(delovno.aktivno.prebivalstvo.koncno$LETO)
 
