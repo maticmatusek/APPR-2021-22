@@ -103,6 +103,7 @@ st.resno.materialno.prikrajsanih.koncno = st.resno.materialno.prikrajsanih.1
 
 ########################################
 
+# POVPREČNA BRUTO IN MINIMALNA PLAČA
 
 
 website <- read_html("https://www.racunovodstvo.net/tabelice/62/podatki-za-obracun-plac-osnovni-podatki")
@@ -194,6 +195,7 @@ povp.placa[15,] = ena_ena_letno
 
 
 vec = c (dva_ena , dva_nic, ena_devet, ena_osem, ena_sedem, ena_sest, ena_pet, ena_stiri, ena_tri, ena_dva, ena_ena, ena_nic, devet, osem, sedem)
+
 ######################################
 
 # ZDRUŽEVANJE TABEL
@@ -217,7 +219,7 @@ tabela_2 = delovno.aktivno.prebivalstvo.koncno %>% left_join(prebivalstvo.koncno
 
 # tabela 3
 
-brezposelni_letno = mesecno.gibanje.brezposelnih.koncno %>% group_by(LETO) %>% summarise(LETNA_BREZPOSELNOST = sum(MESECNA_BREZPOSELNOST))
+brezposelni_letno = mesecno.gibanje.brezposelnih.koncno %>% group_by(LETO) %>% summarise(LETNA.BREZPOSELNOST = sum(MESECNA_BREZPOSELNOST))
 delovno_aktivno_slo = delovno.aktivno.prebivalstvo.koncno %>% filter(SPOL == "Skupaj" ) %>% filter(REGIJA == "SLOVENIJA" ) %>% select(LETO, DELOVNO.AKTIVNO.PREBIVALSTVO)
 povp_dohod_slo = povp.dohod.na.clana.gospodinjstva.koncno %>% filter(REGIJA == "SLOVENIJA") %>% select(LETO, POVP.DOHOD.NA.CLANA.GOSPODINJSTVA)
 prebivalstvo_slo = prebivalstvo.koncno %>% filter(REGIJA == "SLOVENIJA") %>% filter(SPOL == "Skupaj" ) %>% select(LETO, PREBIVALSTVO)
@@ -230,3 +232,7 @@ tabela_3 = st_oseb_pod_pragom_slo %>% left_join(st_resno_prikrajsanih_slo, by = 
                                       left_join(prebivalstvo_slo, by = "LETO") %>%
                                       left_join(povp_dohod_slo, by = "LETO") %>%
                                       left_join(povp.placa, by = "LETO")
+
+tabela_1 %>% write_csv("leto_regija.csv")
+tabela_2 %>% write_csv("leto_regija_spol.csv")
+tabela_3 %>% write_csv("leto_slo.csv")
