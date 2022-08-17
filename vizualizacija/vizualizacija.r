@@ -1,7 +1,14 @@
 # 3. faza: Vizualizacija podatkov
 
-source("lib/libraries.r")
+
 library(ggpubr)
+library(sp)
+library(rgdal)
+library(raster)
+library(rgeos)
+library(tmap)
+source("lib/libraries.r")
+library(tidyverse)
 
 leto_regija = read_csv("leto_regija.csv")
 leto_regija_spol = read_csv("leto_regija_spol.csv")
@@ -132,7 +139,7 @@ min_brezposelnost =   leto_slo %>% filter(leto_slo$BREZPOSELNOST.proti.CELOTNO.P
 min_pod_pragom =  leto_slo %>% filter(leto_slo$POD.PRAGOM.REVSCINE.proti.CELOTNEM.PREB == min(leto_slo$POD.PRAGOM.REVSCINE.proti.CELOTNEM.PREB))
 min_materialno_prikrajsani =  leto_slo %>% filter(leto_slo$RESNO.MATERIALNO.PRIKRAJSANI.proti.CELOTNO.PREB == min(leto_slo$RESNO.MATERIALNO.PRIKRAJSANI.proti.CELOTNO.PREB))
 max_aktivno_preb =  leto_slo %>% filter(leto_slo$AKTIVNO.PREB.proti.CELOTNEM.PREB == max(leto_slo$AKTIVNO.PREB.proti.CELOTNEM.PREB))
-max_bruto:placa =  leto_slo %>% filter(leto_slo$POVP.BRUTO.PLACA == max(leto_slo$POVP.BRUTO.PLACA))
+max_bruto_placa =  leto_slo %>% filter(leto_slo$POVP.BRUTO.PLACA == max(leto_slo$POVP.BRUTO.PLACA))
 max_min_placa =  leto_slo %>% filter(leto_slo$POVP.MIN.PLACA == max(leto_slo$POVP.MIN.PLACA))
 
 
@@ -209,29 +216,29 @@ g_pod_pragom_regije
 # slab scenarij
 Letna_regija_max_pod_pragom_revscine = leto_regija %>% filter(POD.PRAGOM.REVSCINE.proti.CELOTNEM.PREB != is.na(POD.PRAGOM.REVSCINE.proti.CELOTNEM.PREB) ) %>% filter(REGIJA != "SLOVENIJA" ) %>%
   group_by(LETO) %>%
-  mutate(MAX_POD_PRAGOM_REVSCINE = max(POD.PRAGOM.REVSCINE.proti.CELOTNEM.PREB)) %>% filter(MAX_POD_PRAGOM_REVSCINE == POD.PRAGOM.REVSCINE.proti.CELOTNEM.PREB) %>% select(LETO,REGIJA,MAX_POD_PRAGOM_REVSCINE) %>% arrange(-desc(LETO))
+  mutate(MAX_POD_PRAGOM_REVSCINE = max(POD.PRAGOM.REVSCINE.proti.CELOTNEM.PREB)) %>% filter(MAX_POD_PRAGOM_REVSCINE == POD.PRAGOM.REVSCINE.proti.CELOTNEM.PREB) %>% dplyr::select(LETO,REGIJA,MAX_POD_PRAGOM_REVSCINE) %>% arrange(-desc(LETO))
 
 Letna_regija_max_materialno_prikrjsani = leto_regija %>% filter(POD.PRAGOM.REVSCINE.proti.CELOTNEM.PREB != is.na(POD.PRAGOM.REVSCINE.proti.CELOTNEM.PREB) ) %>% filter(REGIJA != "SLOVENIJA" ) %>%
   group_by(LETO) %>%
-  mutate(MAX_MATERIALNO_PRIKRAJSANIH = max(RESNO.MATERIALNO.PRIKRAJSANI.proti.CELOTNO.PREB)) %>% filter(MAX_MATERIALNO_PRIKRAJSANIH == RESNO.MATERIALNO.PRIKRAJSANI.proti.CELOTNO.PREB) %>% select(LETO,REGIJA,MAX_MATERIALNO_PRIKRAJSANIH) %>% arrange(-desc(LETO))
+  mutate(MAX_MATERIALNO_PRIKRAJSANIH = max(RESNO.MATERIALNO.PRIKRAJSANI.proti.CELOTNO.PREB)) %>% filter(MAX_MATERIALNO_PRIKRAJSANIH == RESNO.MATERIALNO.PRIKRAJSANI.proti.CELOTNO.PREB) %>% dplyr::select(LETO,REGIJA,MAX_MATERIALNO_PRIKRAJSANIH) %>% arrange(-desc(LETO))
 
 Letna_regija_min_aktivno_prebivalstvo = leto_regija %>% filter(POD.PRAGOM.REVSCINE.proti.CELOTNEM.PREB != is.na(POD.PRAGOM.REVSCINE.proti.CELOTNEM.PREB) ) %>% filter(REGIJA != "SLOVENIJA" ) %>%
   group_by(LETO) %>%
-  mutate(MIN_AKTIVNO_PREB = min(AKTIVNO.PREB.proti.CELOTNEM.PREB)) %>% filter(MIN_AKTIVNO_PREB == AKTIVNO.PREB.proti.CELOTNEM.PREB) %>% select(LETO,REGIJA,MIN_AKTIVNO_PREB) %>% arrange(-desc(LETO))
+  mutate(MIN_AKTIVNO_PREB = min(AKTIVNO.PREB.proti.CELOTNEM.PREB)) %>% filter(MIN_AKTIVNO_PREB == AKTIVNO.PREB.proti.CELOTNEM.PREB) %>% dplyr::select(LETO,REGIJA,MIN_AKTIVNO_PREB) %>% arrange(-desc(LETO))
 
 ############################
 # dober scenarij
 Letna_regija_min_pod_pragom_revscine = leto_regija %>% filter(POD.PRAGOM.REVSCINE.proti.CELOTNEM.PREB != is.na(POD.PRAGOM.REVSCINE.proti.CELOTNEM.PREB) ) %>% filter(REGIJA != "SLOVENIJA" ) %>%
   group_by(LETO) %>%
-  mutate(MIN_POD_PRAGOM_REVSCINE = min(POD.PRAGOM.REVSCINE.proti.CELOTNEM.PREB)) %>% filter(MIN_POD_PRAGOM_REVSCINE == POD.PRAGOM.REVSCINE.proti.CELOTNEM.PREB) %>% select(LETO,REGIJA,MIN_POD_PRAGOM_REVSCINE) %>% arrange(-desc(LETO))
+  mutate(MIN_POD_PRAGOM_REVSCINE = min(POD.PRAGOM.REVSCINE.proti.CELOTNEM.PREB)) %>% filter(MIN_POD_PRAGOM_REVSCINE == POD.PRAGOM.REVSCINE.proti.CELOTNEM.PREB) %>% dplyr::select(LETO,REGIJA,MIN_POD_PRAGOM_REVSCINE) %>% arrange(-desc(LETO))
 
 Letna_regija_min_materialno_prikrjsani = leto_regija %>% filter(POD.PRAGOM.REVSCINE.proti.CELOTNEM.PREB != is.na(POD.PRAGOM.REVSCINE.proti.CELOTNEM.PREB) ) %>% filter(REGIJA != "SLOVENIJA" ) %>%
   group_by(LETO) %>%
-  mutate(MIN_MATERIALNO_PRIKRAJSANIH = min(RESNO.MATERIALNO.PRIKRAJSANI.proti.CELOTNO.PREB)) %>% filter(MIN_MATERIALNO_PRIKRAJSANIH == RESNO.MATERIALNO.PRIKRAJSANI.proti.CELOTNO.PREB) %>% select(LETO,REGIJA,MIN_MATERIALNO_PRIKRAJSANIH) %>% arrange(-desc(LETO))
+  mutate(MIN_MATERIALNO_PRIKRAJSANIH = min(RESNO.MATERIALNO.PRIKRAJSANI.proti.CELOTNO.PREB)) %>% filter(MIN_MATERIALNO_PRIKRAJSANIH == RESNO.MATERIALNO.PRIKRAJSANI.proti.CELOTNO.PREB) %>% dplyr::select(LETO,REGIJA,MIN_MATERIALNO_PRIKRAJSANIH) %>% arrange(-desc(LETO))
 
 Letna_regija_max_aktivno_prebivalstvo = leto_regija %>% filter(POD.PRAGOM.REVSCINE.proti.CELOTNEM.PREB != is.na(POD.PRAGOM.REVSCINE.proti.CELOTNEM.PREB) ) %>% filter(REGIJA != "SLOVENIJA" ) %>%
   group_by(LETO) %>%
-  mutate(MAX_AKTIVNO_PREB = max(AKTIVNO.PREB.proti.CELOTNEM.PREB)) %>% filter(MAX_AKTIVNO_PREB == AKTIVNO.PREB.proti.CELOTNEM.PREB) %>% select(LETO,REGIJA,MAX_AKTIVNO_PREB) %>% arrange(-desc(LETO))
+  mutate(MAX_AKTIVNO_PREB = max(AKTIVNO.PREB.proti.CELOTNEM.PREB)) %>% filter(MAX_AKTIVNO_PREB == AKTIVNO.PREB.proti.CELOTNEM.PREB) %>% dplyr::select(LETO,REGIJA,MAX_AKTIVNO_PREB) %>% arrange(-desc(LETO))
 
 ########################### Mislim, da z leto_regija več ali manj konec
 ###########################
@@ -263,8 +270,98 @@ g_aktivno_2
 #############################
 # slab scenarij
 
+min_aktivne_zenske =  leto_regija_spol %>% filter(AKTIVNO.PREB.proti.CELOTNEM.PREB != is.na(AKTIVNO.PREB.proti.CELOTNEM.PREB)) %>% filter(SPOL != "Skupaj") %>% filter(SPOL != "Moški") %>%
+  group_by(LETO) %>%
+  mutate(MIN_AKTIVNE_ZENSKE = min(AKTIVNO.PREB.proti.CELOTNEM.PREB)) %>% filter(MIN_AKTIVNE_ZENSKE == AKTIVNO.PREB.proti.CELOTNEM.PREB) %>% dplyr::select(LETO,REGIJA,SPOL,MIN_AKTIVNE_ZENSKE) %>% arrange(-desc(LETO))
+
+min_aktivni_moski =  leto_regija_spol %>% filter(AKTIVNO.PREB.proti.CELOTNEM.PREB != is.na(AKTIVNO.PREB.proti.CELOTNEM.PREB)) %>% filter(SPOL == "Moški") %>%
+  group_by(LETO) %>%
+  mutate(MIN_AKTIVNI_MOSKI = min(AKTIVNO.PREB.proti.CELOTNEM.PREB)) %>% filter(MIN_AKTIVNI_MOSKI == AKTIVNO.PREB.proti.CELOTNEM.PREB) %>% dplyr::select(LETO,REGIJA,SPOL,MIN_AKTIVNI_MOSKI) %>% arrange(-desc(LETO))
+
+
 
 #############################
 # dober scenarij
+
+max_aktivne_zenske =  leto_regija_spol %>% filter(AKTIVNO.PREB.proti.CELOTNEM.PREB != is.na(AKTIVNO.PREB.proti.CELOTNEM.PREB)) %>% filter(SPOL != "Skupaj") %>% filter(SPOL != "Moški") %>%
+  group_by(LETO) %>%
+  mutate(MAX_AKTIVNE_ZENSKE = max(AKTIVNO.PREB.proti.CELOTNEM.PREB)) %>% filter(MAX_AKTIVNE_ZENSKE == AKTIVNO.PREB.proti.CELOTNEM.PREB) %>% dplyr::select(LETO,REGIJA,SPOL,MAX_AKTIVNE_ZENSKE) %>% arrange(-desc(LETO))
+
+max_aktivni_moski =  leto_regija_spol %>% filter(AKTIVNO.PREB.proti.CELOTNEM.PREB != is.na(AKTIVNO.PREB.proti.CELOTNEM.PREB)) %>% filter(SPOL == "Moški") %>%
+  group_by(LETO) %>%
+  mutate(MAX_AKTIVNI_MOSKI = max(AKTIVNO.PREB.proti.CELOTNEM.PREB)) %>% filter(MAX_AKTIVNI_MOSKI == AKTIVNO.PREB.proti.CELOTNEM.PREB) %>% dplyr::select(LETO,REGIJA,SPOL,MAX_AKTIVNI_MOSKI) %>% arrange(-desc(LETO))
+
+#############################
+#############################
+# ZEMLJEVIDI
+
+zemljevid <- uvozi.zemljevid("http://biogeo.ucdavis.edu/data/gadm2.8/shp/SVN_adm_shp.zip",
+                             "SVN_adm1", mapa = 'zemljevid', encoding = "UTF-8")
+
+zemljevid$NAME_1 <- c("Gorenjska", "Goriška","Jugovzhodna Slovenija", "Koroška", "Primorsko-notranjska", "Obalno-kraška", "Osrednjeslovenska", "Podravska", "Pomurska", "Savinjska", "Posavska", "Zasavska")
+
+zemljevid <- fortify(zemljevid)   
+
+# 1
+
+zenske = leto_regija_spol %>% filter(AKTIVNO.PREB.proti.CELOTNEM.PREB != is.na(AKTIVNO.PREB.proti.CELOTNEM.PREB)) %>% filter(SPOL != "Skupaj") %>% filter(REGIJA != "SLOVENIJA") %>% filter(SPOL != "Moški") %>% dplyr::select(REGIJA,LETO,AKTIVNO.PREB.proti.CELOTNEM.PREB)
+
+library(ggiraph)
+
+zemljevid_zaposlenost_zensk <- ggplot() + geom_polygon_interactive(data=left_join( zenske, zemljevid, by=c("REGIJA"="NAME_1")),
+                                                aes(x=long, y=lat, group=group, fill=AKTIVNO.PREB.proti.CELOTNEM.PREB)) +
+  theme(axis.text.x=element_blank(), axis.ticks.x=element_blank(), axis.text.y=element_blank(),
+        axis.ticks.y=element_blank()) +
+  guides(fill=guide_colorbar(title="Stopnja zaposlenosti žensk")) +
+  ggtitle("Zaposlenost žensk") +
+  labs(x = " ") +
+  labs(y = " ") +
+  scale_fill_gradient(low = "red", high = "green",
+                      space = "Lab", na.value = "#e0e0d1", guide = "black",
+                      aesthetics = "fill")+
+  facet_wrap(~ LETO)
+  
+zemljevid_zaposlenost_zensk
+
+# 2
+
+moski = leto_regija_spol %>% filter(AKTIVNO.PREB.proti.CELOTNEM.PREB != is.na(AKTIVNO.PREB.proti.CELOTNEM.PREB)) %>% filter(REGIJA != "SLOVENIJA") %>% filter(SPOL == "Moški") %>% dplyr::select(REGIJA,LETO,AKTIVNO.PREB.proti.CELOTNEM.PREB)
+
+
+zemljevid_zaposlenost_moski <- ggplot() + geom_polygon_interactive(data=left_join( moski, zemljevid, by=c("REGIJA"="NAME_1")),
+                                                                   aes(x=long, y=lat, group=group, fill=AKTIVNO.PREB.proti.CELOTNEM.PREB)) +
+  theme(axis.text.x=element_blank(), axis.ticks.x=element_blank(), axis.text.y=element_blank(),
+        axis.ticks.y=element_blank()) +
+  guides(fill=guide_colorbar(title="Stopnja zaposlenosti moških")) +
+  ggtitle("Zaposlenost moških") +
+  labs(x = " ") +
+  labs(y = " ") +
+  scale_fill_gradient(low = "red", high = "green",
+                      space = "Lab", na.value = "#e0e0d1", guide = "black",
+                      aesthetics = "fill")+
+  facet_wrap(~ LETO)
+
+zemljevid_zaposlenost_moski
+
+# 2
+
+materialno_prikrajsani = leto_regija %>% filter(LETO %in% 2008:2020 ) %>% filter(REGIJA != "SLOVENIJA")  %>% dplyr::select(REGIJA,LETO,RESNO.MATERIALNO.PRIKRAJSANI.proti.CELOTNO.PREB)
+
+zemljevid_materialno_prikrajsani <- ggplot() + geom_polygon(data=left_join( materialno_prikrajsani, zemljevid, by=c("REGIJA"="NAME_1")),
+                                                                   aes(x=long, y=lat, group=group, fill=RESNO.MATERIALNO.PRIKRAJSANI.proti.CELOTNO.PREB)) +
+  theme(axis.text.x=element_blank(), axis.ticks.x=element_blank(), axis.text.y=element_blank(),
+        axis.ticks.y=element_blank()) +
+  guides(fill=guide_colorbar(title="Stopnja resno materialno prikrajšanih")) +
+  ggtitle("Resna materialna prikrajšanost") +
+  labs(x = " ") +
+  labs(y = " ") +
+  scale_fill_gradient(low = "green", high = "red",
+                      space = "Lab", na.value = "green", guide = "black",
+                      aesthetics = "fill")+
+  facet_wrap(~ LETO)
+
+zemljevid_materialno_prikrajsani
+
+
 
 
