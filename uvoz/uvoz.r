@@ -31,8 +31,11 @@ delovno.aktivno.prebivalstvo.1["SPOL"] = replace( novi_spol,novi_spol == "Spol -
 
 delovno.aktivno.prebivalstvo.2 = as.data.frame(delovno.aktivno.prebivalstvo.1)
 
+
+
 # PAZI MORAŠ DAT !RUN! POSEBAJ
-delovno.aktivno.prebivalstvo.koncno = delovno.aktivno.prebivalstvo.2 %>%  mutate( LETO = str_replace_all(LETO, "(\\d{4}) 2 Delovno aktivno prebivalstvo po prebivališču - SKUPAJ", "\\1" ) )
+delovno.aktivno.prebivalstvo.koncno = delovno.aktivno.prebivalstvo.2
+delovno.aktivno.prebivalstvo.koncno$LETO = str_extract(delovno.aktivno.prebivalstvo.2$LETO,"\\d\\d\\d\\d")
 # ^^^^^^^
 
 delovno.aktivno.prebivalstvo.koncno$LETO = as.numeric(delovno.aktivno.prebivalstvo.koncno$LETO)
@@ -109,21 +112,21 @@ st.resno.materialno.prikrajsanih.koncno = st.resno.materialno.prikrajsanih.1
 website <- read_html("https://www.racunovodstvo.net/tabelice/62/podatki-za-obracun-plac-osnovni-podatki")
 
 vse_tabele <- website %>% html_table(fill = TRUE)
-dva_ena = vse_tabele[[2]][2:13,] %>% as.data.frame() %>% select(c(1,2,4))  %>% rename(MESEC = 1, POVP.BRUTO.PLACA = 2, POVP.MIN.PLACA = 3 )
-dva_nic = vse_tabele[[3]][2:13,] %>% as.data.frame() %>% select(c(1,2,4)) %>% rename(MESEC = 1, POVP.BRUTO.PLACA = 2, POVP.MIN.PLACA = 3 )
-ena_devet = vse_tabele[[4]][2:13,] %>% as.data.frame() %>% select(c(1,2,4)) %>% rename(MESEC = 1, POVP.BRUTO.PLACA = 2, POVP.MIN.PLACA = 3 )
-ena_osem = vse_tabele[[5]] %>% as.data.frame() %>% select(c(1,2,4)) %>% rename(MESEC = 1, POVP.BRUTO.PLACA = 2, POVP.MIN.PLACA = 3 )
-ena_sedem = vse_tabele[[6]] %>% as.data.frame() %>% select(c(1,2,4)) %>% rename(MESEC = 1, POVP.BRUTO.PLACA = 2, POVP.MIN.PLACA = 3 )
-ena_sest = vse_tabele[[7]] %>% as.data.frame() %>% select(c(1,2,4)) %>% rename(MESEC = 1, POVP.BRUTO.PLACA = 2, POVP.MIN.PLACA = 3 )
-ena_pet = vse_tabele[[8]] %>% as.data.frame() %>% select(c(1,2,4)) %>% rename(MESEC = 1, POVP.BRUTO.PLACA = 2, POVP.MIN.PLACA = 3 )
-ena_stiri = vse_tabele[[9]] %>% as.data.frame() %>% select(c(1,2,4)) %>% rename(MESEC = 1, POVP.BRUTO.PLACA = 2, POVP.MIN.PLACA = 3 )
-ena_tri = vse_tabele[[10]] %>% as.data.frame() %>% select(c(1,2,4)) %>% rename(MESEC = 1, POVP.BRUTO.PLACA = 2, POVP.MIN.PLACA = 3 )
-ena_dva = vse_tabele[[11]] %>% as.data.frame() %>% select(c(1,2,4)) %>% rename(MESEC = 1, POVP.BRUTO.PLACA = 2, POVP.MIN.PLACA = 3 )
-ena_ena = vse_tabele[[12]] %>% as.data.frame() %>% select(c(1,2,4)) %>% rename(MESEC = 1, POVP.BRUTO.PLACA = 2, POVP.MIN.PLACA = 3 )
-ena_nic = vse_tabele[[13]] %>% as.data.frame() %>% select(c(1,2,4)) %>% rename(MESEC = 1, POVP.BRUTO.PLACA = 2, POVP.MIN.PLACA = 3 )
-devet = vse_tabele[[14]] %>% as.data.frame() %>% select(c(1,2,4)) %>% rename(MESEC = 1, POVP.BRUTO.PLACA = 2, POVP.MIN.PLACA = 3 )
-osem = vse_tabele[[15]] %>% as.data.frame() %>% select(c(1,2,4))%>% rename(MESEC = 1, POVP.BRUTO.PLACA = 2, POVP.MIN.PLACA = 3 )
-sedem = vse_tabele[[16]] %>% as.data.frame() %>% select(c(1,2,4)) %>% rename(MESEC = 1, POVP.BRUTO.PLACA = 2, POVP.MIN.PLACA = 3 )
+dva_ena = vse_tabele[[2]][2:13,] %>% as.data.frame() %>% dplyr::select(c(1,2,4))  %>% rename(MESEC = 1, POVP.BRUTO.PLACA = 2, POVP.MIN.PLACA = 3 )
+dva_nic = vse_tabele[[3]][2:13,] %>% as.data.frame() %>% dplyr::select(c(1,2,4)) %>% rename(MESEC = 1, POVP.BRUTO.PLACA = 2, POVP.MIN.PLACA = 3 )
+ena_devet = vse_tabele[[4]][2:13,] %>% as.data.frame() %>% dplyr::select(c(1,2,4)) %>% rename(MESEC = 1, POVP.BRUTO.PLACA = 2, POVP.MIN.PLACA = 3 )
+ena_osem = vse_tabele[[5]] %>% as.data.frame() %>% dplyr::select(c(1,2,4)) %>% rename(MESEC = 1, POVP.BRUTO.PLACA = 2, POVP.MIN.PLACA = 3 )
+ena_sedem = vse_tabele[[6]] %>% as.data.frame() %>% dplyr::select(c(1,2,4)) %>% rename(MESEC = 1, POVP.BRUTO.PLACA = 2, POVP.MIN.PLACA = 3 )
+ena_sest = vse_tabele[[7]] %>% as.data.frame() %>% dplyr::select(c(1,2,4)) %>% rename(MESEC = 1, POVP.BRUTO.PLACA = 2, POVP.MIN.PLACA = 3 )
+ena_pet = vse_tabele[[8]] %>% as.data.frame() %>% dplyr::select(c(1,2,4)) %>% rename(MESEC = 1, POVP.BRUTO.PLACA = 2, POVP.MIN.PLACA = 3 )
+ena_stiri = vse_tabele[[9]] %>% as.data.frame() %>% dplyr::select(c(1,2,4)) %>% rename(MESEC = 1, POVP.BRUTO.PLACA = 2, POVP.MIN.PLACA = 3 )
+ena_tri = vse_tabele[[10]] %>% as.data.frame() %>% dplyr::select(c(1,2,4)) %>% rename(MESEC = 1, POVP.BRUTO.PLACA = 2, POVP.MIN.PLACA = 3 )
+ena_dva = vse_tabele[[11]] %>% as.data.frame() %>% dplyr::select(c(1,2,4)) %>% rename(MESEC = 1, POVP.BRUTO.PLACA = 2, POVP.MIN.PLACA = 3 )
+ena_ena = vse_tabele[[12]] %>% as.data.frame() %>% dplyr::select(c(1,2,4)) %>% rename(MESEC = 1, POVP.BRUTO.PLACA = 2, POVP.MIN.PLACA = 3 )
+ena_nic = vse_tabele[[13]] %>% as.data.frame() %>% dplyr::select(c(1,2,4)) %>% rename(MESEC = 1, POVP.BRUTO.PLACA = 2, POVP.MIN.PLACA = 3 )
+devet = vse_tabele[[14]] %>% as.data.frame() %>% dplyr::select(c(1,2,4)) %>% rename(MESEC = 1, POVP.BRUTO.PLACA = 2, POVP.MIN.PLACA = 3 )
+osem = vse_tabele[[15]] %>% as.data.frame() %>% dplyr::select(c(1,2,4))%>% rename(MESEC = 1, POVP.BRUTO.PLACA = 2, POVP.MIN.PLACA = 3 )
+sedem = vse_tabele[[16]] %>% as.data.frame() %>% dplyr::select(c(1,2,4)) %>% rename(MESEC = 1, POVP.BRUTO.PLACA = 2, POVP.MIN.PLACA = 3 )
 
 for (i in c(2,3)) {
   
@@ -205,11 +208,11 @@ vec = c (dva_ena , dva_nic, ena_devet, ena_osem, ena_sedem, ena_sest, ena_pet, e
 data_merge1 <- inner_join(st.oseb.pod.pragom.koncno, st.resno.materialno.prikrajsanih.koncno, by = c("LETO", "REGIJA")) 
 data_merge2 <- inner_join(data_merge1, povp.dohod.na.clana.gospodinjstva.koncno, by = c("LETO", "REGIJA")) 
 
-priprava = delovno.aktivno.prebivalstvo.koncno %>% filter(SPOL == "Skupaj") %>% select(REGIJA, LETO, DELOVNO.AKTIVNO.PREBIVALSTVO)
+priprava = delovno.aktivno.prebivalstvo.koncno %>% filter(SPOL == "Skupaj") %>% dplyr::select(REGIJA, LETO, DELOVNO.AKTIVNO.PREBIVALSTVO)
 
 data_merge3 = priprava %>% left_join(data_merge2, by=c("LETO", "REGIJA") )
 
-priprava2 = prebivalstvo.koncno %>% filter(SPOL == "Skupaj") %>% select(REGIJA, LETO, PREBIVALSTVO)
+priprava2 = prebivalstvo.koncno %>% filter(SPOL == "Skupaj") %>% dplyr::select(REGIJA, LETO, PREBIVALSTVO)
 
 tabela_1 = data_merge3 %>% left_join(priprava2, by=c("LETO", "REGIJA"))
 
@@ -220,11 +223,11 @@ tabela_2 = delovno.aktivno.prebivalstvo.koncno %>% left_join(prebivalstvo.koncno
 # tabela 3
 
 brezposelni_letno = mesecno.gibanje.brezposelnih.koncno %>% group_by(LETO) %>% summarise(LETNA.BREZPOSELNOST = sum(MESECNA_BREZPOSELNOST))
-delovno_aktivno_slo = delovno.aktivno.prebivalstvo.koncno %>% filter(SPOL == "Skupaj" ) %>% filter(REGIJA == "SLOVENIJA" ) %>% select(LETO, DELOVNO.AKTIVNO.PREBIVALSTVO)
-povp_dohod_slo = povp.dohod.na.clana.gospodinjstva.koncno %>% filter(REGIJA == "SLOVENIJA") %>% select(LETO, POVP.DOHOD.NA.CLANA.GOSPODINJSTVA)
-prebivalstvo_slo = prebivalstvo.koncno %>% filter(REGIJA == "SLOVENIJA") %>% filter(SPOL == "Skupaj" ) %>% select(LETO, PREBIVALSTVO)
-st_oseb_pod_pragom_slo = st.oseb.pod.pragom.koncno %>% filter(REGIJA == "SLOVENIJA") %>% select(LETO, ST.OSEB.POD.PRAGOM.REVSCINE)
-st_resno_prikrajsanih_slo = st.resno.materialno.prikrajsanih.koncno %>% filter(REGIJA == "SLOVENIJA") %>% select(ST.RESNO.MATERIALNO.PRIKRAJSANIH,LETO)
+delovno_aktivno_slo = delovno.aktivno.prebivalstvo.koncno %>% filter(SPOL == "Skupaj" ) %>% filter(REGIJA == "SLOVENIJA" ) %>% dplyr::select(LETO, DELOVNO.AKTIVNO.PREBIVALSTVO)
+povp_dohod_slo = povp.dohod.na.clana.gospodinjstva.koncno %>% filter(REGIJA == "SLOVENIJA") %>% dplyr::select(LETO, POVP.DOHOD.NA.CLANA.GOSPODINJSTVA)
+prebivalstvo_slo = prebivalstvo.koncno %>% filter(REGIJA == "SLOVENIJA") %>% filter(SPOL == "Skupaj" ) %>% dplyr::select(LETO, PREBIVALSTVO)
+st_oseb_pod_pragom_slo = st.oseb.pod.pragom.koncno %>% filter(REGIJA == "SLOVENIJA") %>% dplyr::select(LETO, ST.OSEB.POD.PRAGOM.REVSCINE)
+st_resno_prikrajsanih_slo = st.resno.materialno.prikrajsanih.koncno %>% filter(REGIJA == "SLOVENIJA") %>% dplyr::select(ST.RESNO.MATERIALNO.PRIKRAJSANIH,LETO)
 
 tabela_3 = st_oseb_pod_pragom_slo %>% left_join(st_resno_prikrajsanih_slo, by = "LETO") %>% 
                                       left_join(brezposelni_letno, by = "LETO")  %>%
