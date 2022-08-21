@@ -1,6 +1,6 @@
 ---
 title: "Poročilo pri predmetu Analiza podatkov s programom R"
-author: "Študent FMF"
+author: "Matic Matušek"
 output:
   html_document: default
   pdf_document:
@@ -20,7 +20,8 @@ source("lib/libraries.r", encoding="UTF-8")
 
 ## Izbira teme
 
-***
+Ker nimam veliko znanja na področju revščine v Sloveniji, se mi je zdelo poučno, da si
+za projektno nalogo izberem analizo revščine, plač in zaposlenosti v Sloveniji. To temo sem si izbral zato, ker me zanima kako so te spremenljivke med seboj povezane. Prav tako me zanima kako so se te podatki skozi leta spreminjali v slovenskih regijah. Časovno obdobje, ki ga bom analiziral traja od leta 2008 pa do 2020, saj sem le za to obdobje našel vse potrebne podatke. Rad bi poiskal povezave med revščino in višino plače, med revščino in zaposlenostjo. Prav tako me zanima, katere izmed slovenskih regij so najrevnejše in obratno. Poiskal bi tudi rad med sabo podobne regije. Analiziral bom tudi zaposlenost moških in žensk po regijah ter poskušal ugotoviti ali je tudi to s čim povezano.
 
 ## Obdelava, uvoz in čiščenje podatkov
 
@@ -28,15 +29,122 @@ source("lib/libraries.r", encoding="UTF-8")
 source("uvoz/uvoz.r", encoding="UTF-8")
 ```
 
-***
+Podatke sem našel na Sistatu, na spletni strani Zavoda za zaposlovanje, na spletni strani računovodstvo.net. Odločil sem se, da jih bom prenesel v obliki csv datotek, xls datotek in html datotek, medtem ko so bili podatki na voljo v .px, .csv, .xlsx in .jstat oblikah. Vse podatke sem najprej prečistil in spremenil v obliko tidy data. 
 
+* [delovno.aktivno.prebivalstvo.koncno](https://pxweb.stat.si/SiStatData/pxweb/sl/Data/-/0775355S.px/table/tableViewLayout2/) - podatki o delovno aktivnem prebivalstvu
+  - `REGIJA` - spremenljivka: ime statistične regije (chr),
+  - `LETO` - spremenljivka: leto meritve (num: 2005-2020),
+  - `SPOL` - spremenljivka: moški, ženske, skupaj(chr),
+  - `DELOVNO.AKTIVNO.PREBIVALSTVO` - meritev: število delovno aktivnega prebivalstva (num).
+
+* [st.resno.materialno.prikrajsanih.koncno](https://pxweb.stat.si/SiStatData/pxweb/sl/Data/-/0867641S.px/table/tableViewLayout2/) - podatki o številu resno materialno prikrajšanih
+  - `REGIJA` - spremenljivka: ime statistične regije (chr),
+  - `LETO` - spremenljivka: leto meritve (num: 2008-2020),
+  - `ST.RESNO.MATERIALNO.PRIRAJSANIH` - meritev: število resno materialno prikrajšanih (num).
+
+* [st.oseb.pod.pragom.koncno](https://pxweb.stat.si/SiStatData/pxweb/sl/Data/-/0867636S.px/table/tableViewLayout2/) - podatki o številu oseb pod pragom revščine
+  - `REGIJA` - spremenljivka: ime statistične regije (chr),
+  - `LETO` - spremenljivka: leto meritve (num: 2008-2020),
+  - `ST.OSEB.POD.PRAGOM.REVSCINE` - meritev: število oseb pod pragom revščine (num).
+  
+* [povp.dohod.na.clana.gospodinjstva.koncno](https://pxweb.stat.si/SiStatData/pxweb/sl/Data/-/0867385S.px/table/tableViewLayout2/) - podatki o izdanih gradbenih dovoljenjih po statističnih regijah
+  - `REGIJA` - spremenljivka: ime statistične regije (chr),
+  - `LETO` - spremenljivka: leto meritve (num: 2008-2020),
+  - `POVP.DOHOD.NA.CLANA.GOSPODINJSTVA` - meritev: povprečni dohodek na člana gospodinjstva (num).
+  
+* [prebivalstvo.koncno](https://pxweb.stat.si/SiStatData/pxweb/sl/Data/Data/05C2002S.px/table/tableViewLayout2/) - podatki o številu prebivalcev
+  - `REGIJA` - spremenljivka: ime statistične regije (chr),
+  - `LETO` - spremenljivka: leto meritve (num: 1990-2021),
+  - `SPOL` - spremenljivka: moški, ženske, skupaj(chr),
+  - `PREBIVALSTVO` - meritev: število prebivalcev (num).
+
+  
+* [mesecno.gibanje.brezposelnih.koncno](https://www.ess.gov.si/trg_dela/trg_dela_v_stevilkah) - podatki o številu brezposelnih
+  - `LETO` - spremenljivka: leto meritve (num: 1992-2022),
+  - `MESEC` - spremenljivka: mesec meritve (chr),
+  - `MESECNA.BREZPOSELNOST` - meritev: število brezposelnih (num). (Kasneje spremenil v letno obdobje).
+  
+  
+* [povp.placa](https://www.racunovodstvo.net/tabelice/62/podatki-za-obracun-plac-osnovni-podatki) - podatki o izdanih gradbenih dovoljenjih po statističnih regijah
+  - `LETO` - spremenljivka: leto meritve (num: 2008-2020),
+  - `POVP.BRUTO.PLACA` - meritev: povprečna bruto plača (num),
+  - `POVP.MIN.PLACA` - meritev: povprečna minimalna plača (num).
+  
+Glede na naravo podatkov sem zgornje tabele združil v tri glavne tabele, s katerimi bom delal v nadaljevanju:
+
+* tabela_1
+  - `REGIJA` - spremenljivka: ime statistične regije (chr),
+  - `LETO` - spremenljivka: leto meritve (num: 2005-2020),
+  - `DELOVNO.AKTIVNO.PREBIVALSTVO` - meritev: število delovno aktivnega prebivalstva (num),
+  - `ST.OSEB.POD.PRAGOM.REVSCINE` - meritev: število oseb pod pragom revščine (num),
+  - `ST.RESNO.MATERIALNO.PRIRAJSANIH` - meritev: število resno materialno prikrajšanih (num),
+  - `POVP.DOHOD.NA.CLANA.GOSPODINJSTVA` - meritev: povprečni dohodek na člana gospodinjstva (num),  
+  - `PREBIVALSTVO` - meritev: število prebivalcev (num).  
+  
+* tabela_2
+  - `LETO` - spremenljivka: leto meritve (num: 2005-2020),
+  - `SPOL` - spremenljivka: moški, ženske, skupaj(chr),
+  - `REGIJA` - spremenljivka: ime statistične regije (chr),
+  - `DELOVNO.AKTIVNO.PREBIVALSTVO` - meritev: število delovno aktivnega prebivalstva (num),
+  - `PREBIVALSTVO` - meritev: število prebivalcev (num). 
+  
+* tabela_3
+  - `LETO` - spremenljivka: leto meritve (num: 2008-2020),
+  - `DELOVNO.AKTIVNO.PREBIVALSTVO` - meritev: število delovno aktivnega prebivalstva (num),
+  - `ST.OSEB.POD.PRAGOM.REVSCINE` - meritev: število oseb pod pragom revščine (num),
+  - `ST.RESNO.MATERIALNO.PRIRAJSANIH` - meritev: število resno materialno prikrajšanih (num),  
+  - `POVP.DOHOD.NA.CLANA.GOSPODINJSTVA` - meritev: povprečni dohodek na člana gospodinjstva (num),  
+  - `PREBIVALSTVO` - meritev: število prebivalcev (num),  
+  - `POVP.BRUTO.PLACA` - meritev: povprečna bruto plača (num),
+  - `POVP.MIN.PLACA` - meritev: povprečna minimalna plača (num),
+  - `LETNA.BREZPOSELNOST` - meritev: število brezposelnih (num).  
+  
+  
 ## Analiza in vizualizacija podatkov
 
 ```{r vizualizacija, results='hide'}
 source("vizualizacija/vizualizacija.r", encoding="UTF-8")
 ```
 
-***
+```{r g_revscina_placa_zaposlenost, echo=FALSE, fig.align='center'}
+g_revscina_placa_zaposlenost
+```
+
+Zgornji trije grafi prikazujejo gibanje različnih spremenljivk od leta 2008 do 2020, katere so vse vezane na celotno Slovenijo. Prvi graf prikazujejo gibanje revščine v spremenjlivki *stopnja resno materialno prikrajšanih* in spremenljivki *stopnja ljudi pod pragom revščine*.Drugi graf prikazuje gibanje povprečne minimalne in bruto plače. Tretji graf pa prikazuje stopnjo aktivnega in brezposelnega prebivalstva. Vsi trije grafi so urejeni vertikalno po letih in tako lažje razberemo povezave med spremenljivkami. Iz tretjega grafa lahko razberemo, da je med finančno gospodarsko krizo, ki se je začela leta 2008 stopnja brezposelnosti krepko narastla, medtem ko je stopnja zaposlenosti rahlo upadla. Ti podatki bi lahko kazali na to, da je večina že zaposlenih svoje službe obdržala, vendar novi delavci, ki so dopolnili 18 let oziroma so se priselili, služb niso dobili. Na drugem grafu opazimo, da minimalna in bruto plača precej podobno naraščata skozi leta. Vidimo tudi, da se je rast plač med letom 2010 in 2017 nekoliko upočasnila, kar je ravno v obdobju med krizo. Iz prvega grafa lahko razberemo, da je stopnja ljudi pod pragom revščine leta 2020 še vedno večja, kot pa je bila leta 2008 in 2009, torej se Slovenija glede na to spremenljivko še vedno ni opomogla iz krize. Zanimivo pa je, da kategorija *stopnja resno materialno prikrajšanih*, ki je strožja od *stopnja ljudi pod pragom revščine*, kaže izboljšanje od leta 2013 naprej. Leta 2019 smo dosegli minimum stopnje resno materialno prikrajšanih v obdobju 2008-2020 in sicer zgolj 2,5% oziroma približno 53000 ljudi. Za natančnejše gibanje revščine si poglejmo še graf, ki prikazuje podatke o številu ljudi.
+
+```{r g_revscina, echo=FALSE, fig.align='center'}
+g_revscina
+```
+Opazimo, da je revščina povezana z višino plače, kajti takrat, ko višina plače ni več naraščala tako močno, sta obe kategoriji revščine narastle. Potem, ko so se plače ponovno začele hitreje dvigovati, je tudi revščina upadla(z zamikom, malo prej). Povezava med zaposlenostjo in revščino pa je še bolj opazna, saj je gibanje stopnje brezposelnosti zelo podobno gibanju števila ljudi pod pragom revčine. Leto z najslabšim scenarijem je leto 2013, kjer je bila stopnja aktivnega prebivalstva najmanjša in sicer 38,5%, število ljudi pod pragom revščine je bilo 291000 (14%), število resno materialno prikrajšanih je bilo 134000 (6,5%). 
+
+```{r g_aktivno, echo=FALSE, fig.align='center', fig.height = 6}
+g_aktivno
+```
+Iz zgornje grafa lahko razberemo stopnjo delovno aktivnih moških in žensk po regijah. zgornji graf je sicer nekoliko nepregleden, vendar pa lahko iz njega razberemo nekaj značilnosti. Opazimo, da so moški in ženske nekako ločeni v dve skupini. Minimum zaposlenih moških se leta 2008 od maksimuma zaposlenih žensk razlikuje skoraj za 10%. Leta 2020 pa je ta razlika padla za približno na polovico na cca. 5% razlike z izjemo Pomurske regije. Pri Pomurski regiji opazimo, da je zaposlenost moških od leta 2014 do leta 2016 preskočilo v skupino žensk. Ne le to, zaposlenost žensk v Pomurski regiji je od leta 2010 naprej najmanjše. Opazimo tudi, da je zaposlenost moških največja v Primorsko-notranjski regiji od 2010 do 2016 in v letu 2020, v drugih letih pa je na vrhu Jugovzhodna regija. Medtem ko je zaposlenost žensk največja v Osrednjeslovenski regiji čez celotno obdobje. Minimum zaposlenih moških je leta 2011 in 2014 dosežen v Zasavski regiji. Bolj pregledno lahko te karakteristike opazimo tudi na spodnjem grafu:
+
+
+```{r g_aktivno_2 , echo=FALSE, fig.align='center'}
+g_aktivno_2
+```
+
+Na spodnjih grafih si poglejmo še primerjavo med dohodkom na člana gospodinjstva in stopnjo obeh dveh kategorij revščine:
+
+```{r dohodek_na_clana_regija , echo=FALSE, fig.align='center'}
+dohodek_na_clana_regija
+```
+
+```{r g_pod_pragom_regije , echo=FALSE, fig.align='center'}
+g_pod_pragom_regije
+```
+
+```{r resno_materialno_prikrajsani_regija , echo=FALSE, fig.align='center'}
+resno_materialno_prikrajsani_regija
+```
+
+^^^^ ANALIZIRAJ TE TRI GRAFE ^^^^
+
+ANALIZIRAJ ŠE ZEMLJEVIDE
+
 
 ## Napredna analiza podatkov
 
@@ -44,7 +152,10 @@ source("vizualizacija/vizualizacija.r", encoding="UTF-8")
 source("analiza/analiza.r", encoding="UTF-8")
 ```
 
-***
+ANALIZIRAJ CLUSTERING
+
+ANALIZIAJ LINEARNO REGRESIJO
+
 
 ```{r shiny}
 #shinyAppDir("shiny", options=list(width="100%", height=600))

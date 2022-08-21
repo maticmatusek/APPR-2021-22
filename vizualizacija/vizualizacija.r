@@ -47,7 +47,8 @@ g_primerjava_stopenj_zaposlenosti_slovenija = leto_slo %>%
     title = "Slovenija",
     y = "%"
   ) +
-  scale_x_continuous(breaks=seq(2007, 2020, 1)) + rremove("legend.title")
+  scale_x_continuous(breaks=seq(2007, 2020, 1)) + rremove("legend.title")+
+  theme(axis.text.x = element_text(angle = 30))
 
 g_primerjava_stopenj_zaposlenosti_slovenija
 
@@ -82,7 +83,8 @@ g_place = leto_slo %>%
     y = "€"
   ) +
   scale_x_continuous(breaks=seq(2007, 2020, 1))  + 
-  scale_y_continuous(breaks=seq(0, 2500, 250)) + rremove("legend.title")
+  scale_y_continuous(breaks=seq(0, 2500, 250)) + rremove("legend.title")+
+  theme(axis.text.x = element_text(angle = 30))
 
 g_place
 
@@ -98,7 +100,9 @@ g_revscina = leto_slo %>%
     y = "Število ljudi"
   ) +
   scale_x_continuous(breaks=seq(2007, 2020, 1)) +
-  scale_y_continuous(breaks=seq(0, 300000, 30000))+ rremove("legend.title")
+  scale_y_continuous(breaks=seq(0, 300000, 30000))+ rremove("legend.title")+
+  theme(axis.text.x = element_text(angle = 30))
+
 
 g_revscina
 
@@ -114,7 +118,8 @@ g_primerjava_stopenj_revscine = leto_slo %>%
     y = "%"
   ) +
   scale_x_continuous(breaks=seq(2007, 2020, 1)) +
-  scale_y_continuous(breaks=seq(0, 0.15, 0.015))+ rremove("legend.title")
+  scale_y_continuous(breaks=seq(0, 0.15, 0.015))+ rremove("legend.title")+
+  theme(axis.text.x = element_text(angle = 30))
 
 g_primerjava_stopenj_revscine
 
@@ -156,14 +161,14 @@ resno_materialno_prikrajsani_regija = leto_regija %>% filter(RESNO.MATERIALNO.PR
   scale_x_continuous(
     breaks = 2008:2020)+
   theme(
-    axis.text.x = element_text(angle = 60, size=6.5, vjust = 1,hjust = 1),
+    axis.text.x = element_text(angle = 60, size=5.5, vjust = 1,hjust = 1),
   ) +
   labs(
     x = "Leto",
     y = "Stopnja resno materialno prikrajšanih (%)",
     title = "Stopnja resno materialno prikrajšanih"
   ) +
-  facet_wrap(~ REGIJA)
+  facet_wrap(~ REGIJA) 
 
 resno_materialno_prikrajsani_regija
 
@@ -177,14 +182,14 @@ dohodek_na_clana_regija = leto_regija %>% filter(POVP.DOHOD.NA.CLANA.GOSPODINJST
   scale_x_continuous(
     breaks = 2008:2020)+
   theme(
-    axis.text.x = element_text(angle = 60, size=6.5, vjust = 1, hjust=1),
+    axis.text.x = element_text(angle = 60, size=5.5, vjust = 1, hjust=1),
   ) +
   labs(
     x = "Leto",
     y = "Dohodek na člana gospodinjstva",
     title = "Dohodek na člana gospodinjstva"
   ) +
-  facet_wrap(~ REGIJA)
+  facet_wrap(~ REGIJA) 
 
 dohodek_na_clana_regija
 
@@ -207,8 +212,8 @@ g_pod_pragom_regije = leto_regija %>% filter(POD.PRAGOM.REVSCINE.proti.CELOTNEM.
   labs( x = "Leto", y = "%", title = "Stopnja ljudi pod pragom revščine")+
   facet_wrap(~ REGIJA)+
   theme(
-    axis.text.x = element_text(angle = 60, size=6.5, vjust = 1, hjust=1),
-  )
+    axis.text.x = element_text(angle = 60, size=5.5, vjust = 1, hjust=1),
+  ) 
 
 g_pod_pragom_regije
 
@@ -343,7 +348,7 @@ zemljevid_zaposlenost_moski <- ggplot() + geom_polygon_interactive(data=left_joi
 
 zemljevid_zaposlenost_moski
 
-# 2
+# 3
 
 materialno_prikrajsani = leto_regija %>% filter(LETO %in% 2008:2020 ) %>% filter(REGIJA != "SLOVENIJA")  %>% dplyr::select(REGIJA,LETO,RESNO.MATERIALNO.PRIKRAJSANI.proti.CELOTNO.PREB)
 
