@@ -231,6 +231,11 @@ Letna_regija_min_aktivno_prebivalstvo = leto_regija %>% filter(POD.PRAGOM.REVSCI
   group_by(LETO) %>%
   mutate(MIN_AKTIVNO_PREB = min(AKTIVNO.PREB.proti.CELOTNEM.PREB)) %>% filter(MIN_AKTIVNO_PREB == AKTIVNO.PREB.proti.CELOTNEM.PREB) %>% dplyr::select(LETO,REGIJA,MIN_AKTIVNO_PREB) %>% arrange(-desc(LETO))
 
+min_dohodek_na_clana = leto_regija %>% filter(POVP.DOHOD.NA.CLANA.GOSPODINJSTVA != is.na(POVP.DOHOD.NA.CLANA.GOSPODINJSTVA) ) %>% filter(REGIJA != "SLOVENIJA" ) %>%
+  group_by(LETO) %>%
+  mutate(MIN_DOHOD_NA_CLANA = min(POVP.DOHOD.NA.CLANA.GOSPODINJSTVA)) %>% filter(MIN_DOHOD_NA_CLANA == POVP.DOHOD.NA.CLANA.GOSPODINJSTVA) %>% dplyr::select(LETO,REGIJA,MIN_DOHOD_NA_CLANA) %>% arrange(-desc(LETO))
+
+
 ############################
 # dober scenarij
 Letna_regija_min_pod_pragom_revscine = leto_regija %>% filter(POD.PRAGOM.REVSCINE.proti.CELOTNEM.PREB != is.na(POD.PRAGOM.REVSCINE.proti.CELOTNEM.PREB) ) %>% filter(REGIJA != "SLOVENIJA" ) %>%
@@ -244,6 +249,11 @@ Letna_regija_min_materialno_prikrjsani = leto_regija %>% filter(POD.PRAGOM.REVSC
 Letna_regija_max_aktivno_prebivalstvo = leto_regija %>% filter(POD.PRAGOM.REVSCINE.proti.CELOTNEM.PREB != is.na(POD.PRAGOM.REVSCINE.proti.CELOTNEM.PREB) ) %>% filter(REGIJA != "SLOVENIJA" ) %>%
   group_by(LETO) %>%
   mutate(MAX_AKTIVNO_PREB = max(AKTIVNO.PREB.proti.CELOTNEM.PREB)) %>% filter(MAX_AKTIVNO_PREB == AKTIVNO.PREB.proti.CELOTNEM.PREB) %>% dplyr::select(LETO,REGIJA,MAX_AKTIVNO_PREB) %>% arrange(-desc(LETO))
+
+max_dohodek_na_clana = leto_regija %>% filter(POVP.DOHOD.NA.CLANA.GOSPODINJSTVA != is.na(POVP.DOHOD.NA.CLANA.GOSPODINJSTVA) ) %>% filter(REGIJA != "SLOVENIJA" ) %>%
+  group_by(LETO) %>%
+  mutate(MAX_DOHOD_NA_CLANA = max(POVP.DOHOD.NA.CLANA.GOSPODINJSTVA)) %>% filter(MAX_DOHOD_NA_CLANA == POVP.DOHOD.NA.CLANA.GOSPODINJSTVA) %>% dplyr::select(LETO,REGIJA,MAX_DOHOD_NA_CLANA) %>% arrange(-desc(LETO))
+
 
 ########################### Mislim, da z leto_regija več ali manj konec
 ###########################

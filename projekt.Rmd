@@ -141,10 +141,13 @@ g_pod_pragom_regije
 resno_materialno_prikrajsani_regija
 ```
 
-^^^^ ANALIZIRAJ TE TRI GRAFE ^^^^
+Povprečni letni dohodek na člana gospodinjstva se giblje precej podobno kot višina bruto plače, tj. čez celotno obdobje večinoma narašča. V najslabšem scenariju se znajdeta regiji Pomurska in Posavska, ki imata do leta 2019 najnižji povprečni dohodek na člana gospodinjstva. Na spodnjih dveh grafih pa opazimo, da je Pomurska regija revnejša, kot Posavska. Čez leta se v množici regij z najvišjo stopnjo materialne prikrajšanosti in najvišjo stopnjo ljudi pod pragom revščine pojavljajo regije Koroška, Posavska, Zasavska in Pomurska. V Posavski regiji je v zadnjih letih opaziti izboljšanje stanja, saj so leta 2020 dosegli 0% materialno prikrajšanih ljudi. Leto prej pa je to dosegla Primorsko-notranjska regija. Zanimivo je to, da povprečni dohodek na člana gospodinjstva na Koroškem ne vpliva na stopnjo ljudi pod pragom revščine, saj od leta 2012 stopnja ljudi pod pragom revščine le narašča, kar se ne dogaja v nobeni drugi regiji. Skozi vsa leta pa je Osrednjeslovenska regija vodilna v višini povprečnega dohodka na člana gospodinjstva, ima pa tudi zelo nizke stopnje obeh kategorij revščine. 
 
-ANALIZIRAJ ŠE ZEMLJEVIDE
+```{r zemljevid_materialno_prikrajsani , echo=FALSE, fig.align='center'}
+zemljevid_materialno_prikrajsani
+```
 
+Na zgornjem zemljevidu lahko spremljamo stopnjo resno materialno prikrajšanih skozi leta. Iz zemljevida je lepo razvidno, da je Slovenija iz leto v leto izboljševala svoje stanje. Leta 2008 vidimo, da je skoraj čez celotno Slovenijo prevladala rjava barva, kar pomeni da je bilo cca. 6% ljudi resno materialno prikrajšanih. Leta 2020 pa opazimo, da je cela Slovenija zelena in je dosegla stopnjo 2,3%. Na zemljevidu so tudi opazni skoki Zasavske regije iz prejšnjega grafa. V letih 2009, 2011, 2012, 2015, 2016, 2017 opazimo rdečo barvo Zasavske regije. Opazi se tudi, da se je izbolšanje stanja začelo na jugozahodu in se je pomikalo proti severovzhodnim regijam.
 
 ## Napredna analiza podatkov
 
@@ -152,10 +155,67 @@ ANALIZIRAJ ŠE ZEMLJEVIDE
 source("analiza/analiza.r", encoding="UTF-8")
 ```
 
-ANALIZIRAJ CLUSTERING
+Pri napredni analizi sem se odločil uporabiti clustering oziroma grupiranje, da ugotovim katere regije so si med seboj podobne. Kategorije med katerimi sem jih primerjal so povprečni letni dohodek na člana gospodinjstva, stopnja ljudi pod pragom revščine, stopnja delovno aktivnega prebivalstva in stopnja resno materialno prikrajšanih ljudi. Za grupiranje sem si izbral leto 2008, saj se je takrat kriza začela in še nekako recesija ni imela takega vpliva, leto 2014, kjer je bil učinek recesije akumuliran in pa leto 2019, kjer naj bi si od recesije že malo opomogli. Zaradi optimalnosti rezultatov, sta v letu 2008 in 2019 dve skupini, v leto 2014 pa 3 skupine.
 
-ANALIZIAJ LINEARNO REGRESIJO
+```{r cluster_2008 , echo=FALSE, fig.align='center'}
+cluster_2008
+```
 
+
+Skupina 1     | Skupina 2
+------------- | -------------
+Pomurksa      | Primorsko-notranjska
+Podravska     | Osrednjeslovenska
+Koroška       | Gorenjska
+Savinjska     | Goriška
+Zasavska      | Obalno-kraška
+Posavska      |
+Jugovzhodna Slovenija |
+
+```{r cluster_2014 , echo=FALSE, fig.align='center'}
+cluster_2014
+```
+
+Skupina 1     | Skupina 2            | Skupina 3
+------------- | ---------------------|------------------
+Pomurksa      | Primorsko-notranjska |   Savinjska
+Podravska     | Osrednjeslovenska    |    Posavska
+Koroška       | Gorenjska            |  Jugovzhodna Slovenija
+Zasavska      | Goriška              |
+    /         | Obalno-kraška        |
+
+
+```{r cluster_2019 , echo=FALSE, fig.align='center'}
+cluster_2019
+```
+
+Skupina 1     | Skupina 2
+------------- | -------------
+Pomurksa      | Primorsko-notranjska
+Podravska     | Osrednjeslovenska
+Koroška       | Gorenjska
+Savinjska     | Goriška
+Zasavska      | Obalno-kraška
+    /         | Posavska 
+    /         | Jugovzhodna Slovenija 
+
+Za leto 2008 in 2019 lahko rečemo, da smo regije razdelili med najboljše in najslabše. Skupina 1 označuje revnejše regije, skupina 2 pa obratno. V letu 2014 imamo 3 skupine, ki jih lahko interpretiramo podobno kot v letu 2008, le da skupina 3 označuje srednje revne regije. Opazimo, da sta se v enajstih letih, tj. iz leta 2008 na leto 2019, uspeli Posavska in Jugovzhodna regija izvlečti iz slabše oziroma revnejše skupine v boljšo skupino. V prehodnem letu 2014, se je iz revnejše skupine poiskusila izvleči tudi Savinjska regija, vendar je leta 2019 ponovno pristala v revnejši skupini.
+
+Zaradi zanmanja s čem je v resnici povezana revščina sem se odločil narediti linearno regresijo, kjer sem primerjal število brezposelnih proti številom ljudi pod pragom revščine in višino povprečne bruto plače proti številu ljudi, ki so resno materialno prikrajšani. Zaradi optimalnosti sem točke v prvi primerjavi aproksimiral z zlomljeno premico, v drugi pa z polinomom pete stopnje.
+
+```{r g_napoved_1 , echo=FALSE, fig.align='center'}
+g_napoved_1
+```
+
+```{r g_napoved_2 , echo=FALSE, fig.align='center'}
+g_napoved_2
+```
+
+Opazimo, da je naše razmišlanje pravilo, oziroma da revščina narašča z padanjem plače in, da revščina narašča z naraščanjem brezposelnih ljudi. Prvi graf kaže skoraj na to, da je korelacijski koeficient med revščino in številom brezposelnih skoraj da 1, medtem ko drugi graf tudi kaže močno povezanost med višino plače in revščino, vendar ne tako očitno zaradi pete stopnje polinoma.
+
+## Zakjluček
+
+Prišel sem do zaključkov, da je z revščino zelo povezana višina plače in pa brezposelnost. Z linerno regresijo sem ugotovil, da je brezposelnost celo bolj povezana z revščino, kot pa višina plače. Z grupiranjem sem ugotovil, da se v letu 2019 Slovenija deli v dve skupini, kjer so regije Pomurska, Podravska, Koroška, Savinjska in Zasavska bolj revne kot pa Primorsko-notranjska, Osrednjeslovenska, Gorenjska, Goriška, Obalno-kraška, Posavska in pa Jugovzhodna Slovenija. Ugotovili smo, da je brezposelnost največja v Pomurski regiji, medtem ko je zaposlenost žensk največja v Osrednjeslovenski regiji. S pomočjo zemljevidov sem ugotovil, da se je stanje resno materialno prikrajšanih ljudi v Sloveniji od leta 2008 do leta 2020 krepko izboljšalo.
 
 ```{r shiny}
 #shinyAppDir("shiny", options=list(width="100%", height=600))
