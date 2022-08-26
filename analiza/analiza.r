@@ -135,7 +135,7 @@ cluster_2019
 # Zemljevidi
 
 zemljevid1 <- uvozi.zemljevid("http://biogeo.ucdavis.edu/data/gadm2.8/shp/SVN_adm_shp.zip",
-                             "SVN_adm1", mapa = 'zemljevid', encoding = "UTF-8")
+                             "SVN_adm1", mapa = 'zemljevid1', encoding = "UTF-8")
 
 zemljevid1$NAME_1 <- c("Gorenjska", "Goriška","Jugovzhodna Slovenija", "Koroška", "Primorsko-notranjska", "Obalno-kraška", "Osrednjeslovenska", "Podravska", "Pomurska", "Savinjska", "Posavska", "Zasavska")
 
