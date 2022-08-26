@@ -156,14 +156,14 @@ source("analiza/analiza.r", encoding="UTF-8")
 
 Pri napredni analizi sem se odločil uporabiti clustering oziroma grupiranje, da ugotovim katere regije so si med seboj podobne. Kategorije med katerimi sem regije primerjal so: povprečni letni dohodek na člana gospodinjstva, stopnja ljudi pod pragom revščine, stopnja delovno aktivnega prebivalstva in stopnja resno materialno prikrajšanih ljudi. Za grupiranje sem si izbral leto 2008, saj se je takrat kriza začela in še nekako recesija ni imela takega vpliva, leto 2014, kjer je bil učinek recesije akumuliran in pa leto 2019, kjer naj bi si od recesije že malo opomogli. Zaradi optimalnosti rezultatov, sta v letu 2008 in 2019 dve skupini, v letu 2014 pa 3 skupine.
 
-```{r cluster_2008 , echo=FALSE, fig.align='center'}
-cluster_2008
+```{r zemljevid_2008 , echo=FALSE, fig.align='center'}
+zemljevid_2008
 ```
 
 
 Skupina 1     | Skupina 2
 ------------- | -------------
-Pomurksa      | Primorsko-notranjska
+Pomurska      | Primorsko-notranjska
 Podravska     | Osrednjeslovenska
 Koroška       | Gorenjska
 Savinjska     | Goriška
@@ -171,26 +171,26 @@ Zasavska      | Obalno-kraška
 Posavska      |
 Jugovzhodna Slovenija |
 
-```{r cluster_2014 , echo=FALSE, fig.align='center'}
-cluster_2014
+```{r zemljevid_2014 , echo=FALSE, fig.align='center'}
+zemljevid_2014
 ```
 
 Skupina 1     | Skupina 2            | Skupina 3
 ------------- | ---------------------|------------------
-Pomurksa      | Primorsko-notranjska |   Savinjska
+Pomurska      | Primorsko-notranjska |   Savinjska
 Podravska     | Osrednjeslovenska    |    Posavska
 Koroška       | Gorenjska            |  Jugovzhodna Slovenija
 Zasavska      | Goriška              |
     /         | Obalno-kraška        |
 
 
-```{r cluster_2019 , echo=FALSE, fig.align='center'}
-cluster_2019
+```{r zemljevid_2019 , echo=FALSE, fig.align='center'}
+zemljevid_2019
 ```
 
 Skupina 1     | Skupina 2
 ------------- | -------------
-Pomurksa      | Primorsko-notranjska
+Pomurska      | Primorsko-notranjska
 Podravska     | Osrednjeslovenska
 Koroška       | Gorenjska
 Savinjska     | Goriška

@@ -13,6 +13,8 @@ library(factoextra)
 library(gridExtra)
 library(NbClust)
 library(GGally)
+library(ggiraph)
+
 
 leto_regija = read_csv("leto_regija.csv")
 leto_regija_spol = read_csv("leto_regija_spol.csv")
@@ -128,6 +130,77 @@ fviz_nbclust(ena_devet, kmeans, nstart = 25,  method = "gap_stat", nboot = 50) +
 kmeans2019 <- kmeans(ena_devet, centers = 2)
 cluster_2019 = fviz_cluster(kmeans2019, ena_devet, main = "2019") 
 cluster_2019
+
+###########################
+# Zemljevidi
+
+zemljevid1 <- uvozi.zemljevid("http://biogeo.ucdavis.edu/data/gadm2.8/shp/SVN_adm_shp.zip",
+                             "SVN_adm1", mapa = 'zemljevid', encoding = "UTF-8")
+
+zemljevid1$NAME_1 <- c("Gorenjska", "Goriška","Jugovzhodna Slovenija", "Koroška", "Primorsko-notranjska", "Obalno-kraška", "Osrednjeslovenska", "Podravska", "Pomurska", "Savinjska", "Posavska", "Zasavska")
+
+zemljevid1 <- fortify(zemljevid1)   
+
+regije = c("Pomurska","Primorsko-notranjska","Podravska", "Osrednjeslovenska","Koroška", "Gorenjska", "Savinjska" , "Goriška","Zasavska", "Obalno-kraška", "Posavska" , "Jugovzhodna Slovenija")
+leto2008 = c("1","2","1","2","1","2","1","2","1","2","1","1")
+leto2014 = c("1","2","1","2","1","2","3","2","1","2","3","3")
+leto2019 = c("1","2","1","2","1","2","1","2","1","2","2","2")
+
+df2008 <- data.frame(REGIJA=regije ,Skupina = leto2008)
+df2014 <- data.frame(REGIJA=regije ,Skupina = leto2014)
+df2019 <- data.frame(REGIJA=regije ,Skupina = leto2019)
+
+zemljevid_2008 <-     ggplot() +
+  geom_polygon( data=left_join( zemljevid1, df2008 , by=c("NAME_1"="REGIJA")),
+    mapping = aes(long, lat, group = group, fill = Skupina),
+    color = "grey"
+  ) +
+  scale_fill_brewer() +
+  coord_map() +
+  theme_classic() +
+  theme(
+    axis.line = element_blank(),
+    axis.ticks = element_blank(),
+    axis.text = element_blank(),
+    axis.title = element_blank()
+  )+
+  ggtitle("2008")
+  
+zemljevid_2014 <-     ggplot() +
+  geom_polygon( data=left_join( zemljevid1, df2014 , by=c("NAME_1"="REGIJA")),
+                mapping = aes(long, lat, group = group, fill = Skupina),
+                color = "grey"
+  ) +
+  scale_fill_brewer() +
+  coord_map() +
+  theme_classic() +
+  theme(
+    axis.line = element_blank(),
+    axis.ticks = element_blank(),
+    axis.text = element_blank(),
+    axis.title = element_blank()
+  )+
+  ggtitle("2014")
+
+zemljevid_2019 <-     ggplot() +
+  geom_polygon( data=left_join( zemljevid1, df2019 , by=c("NAME_1"="REGIJA")),
+                mapping = aes(long, lat, group = group, fill = Skupina),
+                color = "grey"
+  ) +
+  scale_fill_brewer() +
+  coord_map() +
+  theme_classic() +
+  theme(
+    axis.line = element_blank(),
+    axis.ticks = element_blank(),
+    axis.text = element_blank(),
+    axis.title = element_blank()
+  )+
+  ggtitle("2019")
+
+zemljevid_2008
+zemljevid_2014
+zemljevid_2019
 
 ############################
 ############################
